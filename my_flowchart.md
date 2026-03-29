@@ -1,62 +1,54 @@
 # 我的流程图
 
 ```mermaid
-graph LR
-    %% 全局样式设置
-    classDef yellowBox fill:#FFF4DD,stroke:#D4A017,stroke-width:2px;
-    classDef blueBox fill:#E1F5FE,stroke:#01579B,stroke-width:1px;
+graph TD
+    %% 颜色定义
+    classDef core fill:#E8EAF6,stroke:#3F51B5,stroke-width:3px,color:#1A237E,font-weight:bold;
+    classDef experiment fill:#FFFFFF,stroke:#03A9F4,stroke-width:1px;
+    classDef category fill:#FFF9C4,stroke:#FBC02D,stroke-width:2px,font-weight:bold;
 
-    %% 1. 实验分组阶段
-    subgraph Grouping ["实验分组"]
-        A1["对照组 (HEMn-LP)"]
-        A2["实验组 (A375)"]
+    %% 中央核心逻辑轴 (从上往下)
+    Center1((("AI 皮肤镜图像<br/>特征提取"))) --- Center2((("细胞形态边界<br/>不规则表型")))
+    Center2 --- Center3((("分子机制解析<br/>(EMT通路)")))
+    Center3 --- Center4((("AI 模型权重<br/>闭环优化")))
+
+    %% 1. 左侧：湿实验验证 (细胞功能)
+    subgraph WetExp ["湿实验验证 (细胞表型)"]
+        direction TB
+        W1["MTS法 (增殖能力)"]
+        W2["划痕实验 (迁移能力)"]
+        W3["Transwell (侵袭能力)"]
     end
-    class Grouping yellowBox;
-    class A1,A2 blueBox;
-
-    %% 2. 细胞功能表型检测阶段
-    subgraph Detection ["细胞功能表型检测 (湿实验验证)"]
-        B1["形态学采集与AI特征提取<br/>(速度/密度/不规则度/清晰度)"]
-        B2["增殖能力检测<br/>(MTS法)"]
-        B3["水平迁移能力检测<br/>(划痕实验)"]
-        B4["跨基质侵袭能力检测<br/>(Transwell实验)"]
+    
+    %% 2. 右侧：干实验分析 (数据关联)
+    subgraph DryExp ["干实验分析 (特征关联)"]
+        direction TB
+        D1["Pearson 相关性分析"]
+        D2["SPSS 26.0 统计检验"]
+        D3["边界特征 vs 恶性度"]
     end
-    class Detection yellowBox;
-    class B1,B2,B3,B4 blueBox;
 
-    %% 3. 数据分析与关联阶段
-    subgraph Analysis ["特征关联与统计分析"]
-        C1["Pearson相关性分析<br/>(边界特征 vs 迁移/侵袭能力)"]
-        C2["SPSS 26.0 统计检验<br/>(P < 0.05)"]
+    %% 3. 底部：深度机制研究
+    subgraph BioMech ["深度机制研究"]
+        direction LR
+        M1["转录组测序 (RNA-seq)"] --- M2["免疫荧光 (细胞骨架)"] --- M3["Western Blot (EMT蛋白)"]
     end
-    class Analysis yellowBox;
-    class C1,C2 blueBox;
 
-    %% 4. 分子机制验证阶段
-    subgraph Mechanism ["分子机制研究"]
-        D1["转录组测序与分析"]
-        D2["免疫荧光染色<br/>(细胞骨架/伪足)"]
-        D3["Western Blot检测<br/>(EMT相关蛋白: E-cad/N-cad/Vim)"]
-    end
-    class Mechanism yellowBox;
-    class D1,D2,D3 blueBox;
+    %% 逻辑连接
+    Center1 -.->|"形态学匹配"| B1["A375 vs HEMn-LP"]
+    B1 --> WetExp
+    WetExp --> Center2
+    
+    Center2 --> DryExp
+    DryExp --> Center3
+    
+    Center3 --> BioMech
+    BioMech --> Center4
 
-    %% 5. AI闭环优化阶段
-    subgraph AICycle ["AI模型优化 (干实验反馈)"]
-        E1["机制结果反馈至AI模型"]
-        E2["优化特征提取权重<br/>(解决'黑箱问题')"]
-    end
-    class AICycle yellowBox;
-    class E1,E2 blueBox;
+    %% 闭环反馈
+    Center4 ==>|"以湿调干: 消除黑箱"| Center1
 
-    %% 连接关系
-    A1 & A2 --> B1 & B2 & B3 & B4
-    B1 & B2 & B3 & B4 --> C1
-    C1 --> C2
-    C2 --> D1
-    D1 --> D2 & D3
-    D2 & D3 --> E1
-    E1 --> E2
-
-    %% 闭环回流箭头
-    E2 -.->|"干湿结合, 以干促湿, 以湿调干"| B1
+    %% 样式应用
+    class Center1,Center2,Center3,Center4 core;
+    class W1,W2,W3,D1,D2,D3,M1,M2,M3,B1 experiment;
+    class WetExp,DryExp,BioMech category;

@@ -71,8 +71,3 @@ graph TD
 
     %% ==================== 闭环反馈 ====================
     Center4 ==>|"以湿调干: 消除黑箱"| Center1
-
-    %% 调整布局，使模块分布更合理
-    rankdir=TB
-    {rank=same; WetExp CoreAxis DryExp}
-    {rank=same; BioMech}
